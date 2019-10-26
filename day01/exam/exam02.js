@@ -4,7 +4,7 @@ class React {
       this.state = {};
     }
     for(let key of Object.keys(data)) {
-      this.state[key] = data[key]
+      this.state[key] = parseInt(data[key]);
     }
   }
   render() {
@@ -13,6 +13,44 @@ class React {
     }
   }
 }
+
+class Calculation extends React {
+  sum(){
+    console.log(this.state[0]+this.state[1]);
+  }
+  sub(){
+    console.log(this.state[0]-this.state[1]);
+  }
+  mul(){
+    console.log(this.state[0]*this.state[1]);
+  }
+  par(){
+    console.log(this.state[0]/this.state[1]);
+  }
+  goo(){
+    for(var i=1;i<10;i++){
+      console.log(`${this.state[0]} X ${i} = ${this.state[0]*i}`)
+    }
+  }
+  evenOdd(){
+    if(this.state[0]%2 ==0){
+      console.log('짝수다');
+    }else{
+      console.log('홀수다');
+    }
+  }
+}
+
+const calculation = new Calculation;
+
+calculation.setState({0:'3'});
+calculation.setState({1:'2'});
+calculation.sum();
+//calculation.sub();
+calculation.mul();
+calculation.par();
+calculation.evenOdd();
+calculation.goo();
 
 /**
  * 1. 리액트 상속받는 클래스 만들기
