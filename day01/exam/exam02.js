@@ -33,10 +33,10 @@ class Calculation extends React {
     }
   }
   evenOdd(){
-    if(this.state[0]%2 ==0){
-      console.log('짝수다');
-    }else{
+    if(this.state[0]%2){
       console.log('홀수다');
+    }else{
+      console.log('짝수다');
     }
   }
 }
