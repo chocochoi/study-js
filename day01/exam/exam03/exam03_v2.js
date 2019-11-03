@@ -17,13 +17,17 @@ class MemoServer {
         content: content
       });
   }
+  editMemo(num,title,content){
+    this.db.items[num].title = title;
+    this.db.items[num].content = content;
+  }
   retrieveMemo() {
       return this.db.items;
   }
-  deleteMemo() {
-      this.db.count = 0;
-      this.db.index = 0;
-      this.db.items = [];
+  deleteMemo(num) {
+      // this.db.count = 0;
+      // this.db.index = 0;
+      this.db.items.splice(num,1);
   }
 }
 
@@ -36,10 +40,15 @@ class MemoFront {
       this.usernameInput = () => prompt('글쓴이를 입력하세요 : ');
       this.contentInput = () => prompt('내용을 입력하세요 : ');
       this.selectNumInput = () => prompt('조회할 글번호를 입력하세요 :');
+      this.deleteNumInput = () => prompt('삭제할 글번호를 입력하세요 :');
+      this.editNumInput = () => prompt('수정할 글번호를 입력하세요 :');
+      this.editTitleInput = () => prompt('변경할 제목을 입력하세요 :');
+      this.editContentInput = () => prompt('변경할 내용을 입력하세요 :');
       this.createForm = this.createForm.bind(this);
       this.numberSearchForm = this.numberSearchForm.bind(this);
       this.retrieveForm = this.retrieveForm.bind(this);
       this.deleteForm = this.deleteForm.bind(this);
+      this.editForm = this.editForm.bind(this);
   }
 
   total(){
@@ -109,12 +118,12 @@ class MemoFront {
   }
 
   numberSearchForm(){
-    let num = this.selectNumInput();
-    let numCount = 0;
+    let numSearch = this.selectNumInput();
+    let numCountSearch = 0;
     this.header();
     // .entries()
     this.server.retrieveMemo().forEach(function (item, index, array) {
-      if(item.index === parseInt(num)){
+      if(item.index === parseInt(numSearch)){
         console.log(`
 번호 : ${item.index}
 
@@ -125,27 +134,57 @@ class MemoFront {
 내용 : ${item.content}
         `);
       }else{
-        numCount++;
+        numCountSearch++;
       }
     });
-    if(numCount === this.server.retrieveMemo().length){
+    if(numCountSearch === this.server.retrieveMemo().length){
       console.log('입력된 번호는 존재하지 않습니다.');
     }
     return this.footer();
   }
 
   deleteForm() {
+      let numDelete = this.deleteNumInput();
+      let numCountDelete = 0;
+      let indexDelete = 0;
       this.header();
-      if(this.server.getMemoCount()) {
-          this.server.deleteMemo();
-          console.log('메모가 전부 삭제되었습니다.');
-      }
-      else {
-          console.log('메모가 없습니다.');
+      this.server.retrieveMemo().forEach(function (item, index, array) {
+        if(item.index === parseInt(numDelete)){
+          indexDelete = index;
+        }else{
+          numCountDelete++;
+        }
+      });
+      if( numCountDelete === this.server.retrieveMemo().length){
+        console.log('입력하신 번호에 해당하는 게시글이 없습니다.');
+      }else{
+        this.server.deleteMemo(indexDelete);
+        console.log('게시글이 삭제되었습니다.');
       }
       return this.footer();
+  }
 
-
+  editForm(){
+    let numEdit = this.editNumInput();
+    let titleEdit = this.editTitleInput();
+    let contentEdit = this.editContentInput();
+    let numCountEdit = 0;
+    let indexEdit = 0;
+    this.header();
+    this.server.retrieveMemo().forEach(function (item, index, array) {
+      if(item.index === parseInt(numEdit)){
+        indexEdit = index;
+      }else{
+        numCountEdit++;
+      }
+    });
+    if( numCountEdit === this.server.retrieveMemo().length){
+      console.log('입력된 번호는 존재하지 않습니다.');
+    }else{
+      this.server.editMemo(indexEdit,titleEdit,contentEdit);
+      console.log('게시글이 수정되었습니다.');
+    }
+    return this.footer();
   }
 
   render() {
