@@ -76,6 +76,10 @@ class MemoFront {
       }
   }
 
+  search(){
+
+  }
+
   index() {
       console.log(`
 ------------------------------------
